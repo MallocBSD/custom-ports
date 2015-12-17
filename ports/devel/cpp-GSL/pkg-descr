@@ -1,0 +1,7 @@
+The Guidelines Support Library (GSL) contains functions and types that are
+suggested for use by the C++ Core Guidelines maintained by the Standard C++
+Foundation. This repo contains Microsoft's implementation of GSL.
+
+The library includes types like span<T>, string_span, owner<> and others.
+
+WWW: https://github.com/Microsoft/GSL

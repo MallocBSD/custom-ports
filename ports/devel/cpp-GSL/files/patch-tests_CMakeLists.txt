@@ -1,0 +1,31 @@
+--- tests/CMakeLists.txt.orig	2015-12-14 19:51:16 UTC
++++ tests/CMakeLists.txt
+@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.8.7)
+ 
+ project(GSLTests CXX)
+ 
+-add_subdirectory(unittest-cpp)
++find_package( UNITTEST++ REQUIRED )
+ 
+ include_directories(
+     ../include
+-    ./unittest-cpp
++    ${UNITTEST++_INCLUDE_DIR}
+ )
+ 
+ add_definitions(-DGSL_THROW_ON_CONTRACT_VIOLATION)
+@@ -28,13 +28,9 @@ else()
+     endif()
+ endif()
+ 
+-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/unittest-cpp)
+-  message(FATAL_ERROR "Could not find unittest-cpp enlistment. Please run 'git clone https://github.com/Microsoft/unittest-cpp.git unittest-cpp' in the tests directory")
+-endif()
+-
+ function(add_gsl_test name)
+     add_executable(${name} ${name}.cpp ../include/gsl.h ../include/gsl_assert.h ../include/gsl_util.h ../include/span.h ../include/string_span.h)
+-    target_link_libraries(${name} UnitTest++)
++    target_link_libraries(${name} ${UNITTEST++_LIBRARIES})
+     install(TARGETS ${name}
+         RUNTIME DESTINATION bin
+     )

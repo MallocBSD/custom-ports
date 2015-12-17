@@ -1,0 +1,6 @@
+include/GSL/gsl.h
+include/GSL/gsl_assert.h
+include/GSL/gsl_util.h
+include/GSL/span.h
+include/GSL/string_span.h
+lib/cmake/cppgsl/cppgsl-config.cmake
