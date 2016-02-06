@@ -1,0 +1,20 @@
+--- bin/ps/Makefile.orig	2015-12-29 06:03:45 UTC
++++ bin/ps/Makefile
+@@ -1,4 +1,4 @@
+-# $FreeBSD: releng/10.1/bin/ps/Makefile 266279 2014-05-17 02:32:47Z bdrewery $
++# $FreeBSD: head/bin/ps/Makefile 289490 2015-10-18 07:30:50Z ngie $
+ #	@(#)Makefile	8.1 (Berkeley) 6/2/93
+ 
+ PROG=	ps
+@@ -10,8 +10,8 @@ SRCS=	fmt.c keyword.c nlist.c print.c ps
+ # keep ps from being an unnecessary load
+ # on large systems.
+ #
+-CFLAGS+=-DLAZY_PS
+-DPADD=	${LIBM} ${LIBKVM} ${LIBJAIL}
+-LDADD=	-lm -lkvm -ljail
++CFLAGS+=-DLAZY_PS -I/usr/local/include
++DPADD=	${LIBM} ${LIBKVM} ${LIBJAIL} ${LIBUTIL}
++LDADD=	-lm -lkvm -ljail -lutil -lxo
+ 
+ .include <bsd.prog.mk>

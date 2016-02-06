@@ -1,0 +1,13 @@
+--- usr.bin/wc/Makefile.orig	2015-12-29 09:27:09 UTC
++++ usr.bin/wc/Makefile
+@@ -1,5 +1,9 @@
+ #	@(#)Makefile	8.1 (Berkeley) 6/6/93
+-# $FreeBSD: releng/10.1/usr.bin/wc/Makefile 201386 2010-01-02 10:27:05Z ed $
++# $FreeBSD: head/usr.bin/wc/Makefile 289490 2015-10-18 07:30:50Z ngie $
+ 
+ PROG=	wc
++CFLAGS+=${CARGS}
++DPADD=	${LIBUTIL}
++LDADD=	-lutil -lxo
++
+ .include <bsd.prog.mk>

@@ -1,0 +1,18 @@
+--- usr.bin/procstat/Makefile.orig	2015-12-29 08:36:41 UTC
++++ usr.bin/procstat/Makefile
+@@ -1,4 +1,4 @@
+-# $FreeBSD: releng/10.1/usr.bin/procstat/Makefile 267979 2014-06-27 20:34:22Z jhb $
++# $FreeBSD: head/usr.bin/procstat/Makefile 287486 2015-09-05 17:02:01Z allanjude $
+ 
+ PROG=	procstat
+ MAN=	procstat.1
+@@ -16,7 +16,8 @@ SRCS=	procstat.c		\
+ 	procstat_threads.c	\
+ 	procstat_vm.c
+ 
+-LDADD+=	-lutil -lprocstat -lkvm
++CFLAGS+=${CARGS}
++LDADD+=	-lutil -lprocstat -lkvm -lxo
+ DPADD+=	${LIBUTIL} ${LIBPROCSTAT} ${LIBKVM}
+ 
+ .include <bsd.prog.mk>

@@ -1,0 +1,21 @@
+--- bin/df/Makefile.orig	2015-12-29 08:07:23 UTC
++++ bin/df/Makefile
+@@ -1,5 +1,5 @@
+ #	@(#)Makefile	8.3 (Berkeley) 5/8/95
+-# $FreeBSD: releng/10.1/bin/df/Makefile 129678 2004-05-24 22:22:29Z pjd $
++# $FreeBSD: head/bin/df/Makefile 275028 2014-11-25 11:15:40Z bapt $
+ 
+ MOUNT=	${.CURDIR}/../../sbin/mount
+ .PATH: ${MOUNT}
+@@ -7,9 +7,9 @@ MOUNT=	${.CURDIR}/../../sbin/mount
+ PROG=	df
+ SRCS=	df.c vfslist.c
+ 
+-CFLAGS+= -I${MOUNT}
++CFLAGS+= -I${MOUNT} ${CARGS}
+ 
+ DPADD=	${LIBUTIL}
+-LDADD=	-lutil
++LDADD=	-lutil -lxo
+ 
+ .include <bsd.prog.mk>

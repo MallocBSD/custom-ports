@@ -1,0 +1,15 @@
+--- sbin/savecore/Makefile.orig	2015-12-29 09:25:09 UTC
++++ sbin/savecore/Makefile
+@@ -1,8 +1,9 @@
+-# $FreeBSD: releng/10.1/sbin/savecore/Makefile 198236 2009-10-19 16:00:24Z ru $
++# $FreeBSD: head/sbin/savecore/Makefile 289490 2015-10-18 07:30:50Z ngie $
+ 
+ PROG=	savecore
+-DPADD=	${LIBZ}
+-LDADD=	-lz
++CFLAGS+=${CARGS}
++DPADD=	${LIBZ} ${LIBUTIL}
++LDADD=	-lz -lutil -lxo
+ MAN=	savecore.8
+ 
+ .include <bsd.prog.mk>

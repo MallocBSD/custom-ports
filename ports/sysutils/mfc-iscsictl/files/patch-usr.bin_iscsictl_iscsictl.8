@@ -1,0 +1,90 @@
+--- usr.bin/iscsictl/iscsictl.8.orig	2015-12-29 02:29:49 UTC
++++ usr.bin/iscsictl/iscsictl.8
+@@ -25,9 +25,9 @@
+ .\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ .\" SUCH DAMAGE.
+ .\"
+-.\" $FreeBSD: releng/10.1/usr.bin/iscsictl/iscsictl.8 271734 2014-09-18 03:02:00Z allanjude $
++.\" $FreeBSD: head/usr.bin/iscsictl/iscsictl.8 291607 2015-12-01 19:18:53Z rodrigc $
+ .\"
+-.Dd September 12, 2014
++.Dd December 1, 2015
+ .Dt ISCSICTL 8
+ .Os
+ .Sh NAME
+@@ -36,7 +36,9 @@
+ .Sh SYNOPSIS
+ .Nm
+ .Fl A
+-.Fl p Ar portal Fl t Ar target Op Fl u Ar user Fl s Ar secret
++.Fl p Ar portal Fl t Ar target
++.Op Fl u Ar user Fl s Ar secret
++.Op Fl w Ar timeout
+ .Nm
+ .Fl A
+ .Fl d Ar discovery-host Op Fl u Ar user Fl s Ar secret
+@@ -70,6 +72,7 @@
+ .Nm
+ .Fl L
+ .Op Fl v
++.Op Fl w Ar timeout
+ .Sh DESCRIPTION
+ The
+ .Nm
+@@ -77,6 +80,13 @@ utility is used to configure the iSCSI i
+ .Pp
+ The following options are available:
+ .Bl -tag -width ".Fl A"
++.It Fl -libxo
++Generate output via
++.Xr libxo 3
++in a selection of different human and machine readable formats.
++See
++.Xr xo_parse_args 3
++for details on command line arguments.
+ .It Fl A
+ Add session.
+ .It Fl M
+@@ -113,6 +123,10 @@ Target name.
+ CHAP login.
+ .It Fl v
+ Verbose mode.
++.It Fl w
++Instead of returning immediately, wait up to
++.Ar timeout
++seconds until all configured sessions are successfully established.
+ .El
+ .Pp
+ Certain parameters are necessary when adding a session.
+@@ -132,9 +146,11 @@ via configuration file.
+ .Pp
+ Since connecting to the target is performed in background, non-zero
+ exit status does not mean that the session was successfully established.
+-Use
++Use either
+ .Nm Fl L
+-to check the connection status.
++to check the connection status, or the
++.Fl w
++flag to wait for session establishment.
+ .Pp
+ Note that in order for the iSCSI initiator to be able to connect to a target,
+ the
+@@ -173,7 +189,9 @@ Disconnect all iSCSI sessions:
+ .Sh SEE ALSO
+ .Xr iscsi 4 ,
+ .Xr iscsi.conf 5 ,
+-.Xr iscsid 8
++.Xr iscsid 8 ,
++.Xr libxo 3 ,
++.Xr xo_parse_args 3
+ .Sh HISTORY
+ The
+ .Nm
+@@ -183,5 +201,5 @@ command appeared in
+ The
+ .Nm
+ utility was developed by
+-.An Edward Tomasz Napierala Aq trasz@FreeBSD.org
++.An Edward Tomasz Napierala Aq Mt trasz@FreeBSD.org
+ under sponsorship from the FreeBSD Foundation.

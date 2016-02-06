@@ -1,0 +1,18 @@
+--- bin/ls/Makefile.orig	2015-12-29 08:18:18 UTC
++++ bin/ls/Makefile
+@@ -1,12 +1,13 @@
+ #	@(#)Makefile	8.1 (Berkeley) 6/2/93
+-# $FreeBSD: releng/10.1/bin/ls/Makefile 235655 2012-05-19 18:05:00Z marcel $
++# $FreeBSD: head/bin/ls/Makefile 288330 2015-09-28 03:36:15Z ngie $
+ 
+ .include <bsd.own.mk>
+ 
+ PROG=	ls
+ SRCS=	cmp.c ls.c print.c util.c
++CFLAGS+=${CARGS}
+ DPADD=	${LIBUTIL}
+-LDADD=	-lutil
++LDADD=	-lutil -lxo
+ 
+ .if !defined(RELEASE_CRUNCH) && \
+ 	${MK_LS_COLORS} != no

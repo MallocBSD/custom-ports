@@ -1,0 +1,14 @@
+--- bin/ps/Makefile.orig	2015-12-29 09:01:39 UTC
++++ bin/ps/Makefile
+@@ -10,8 +10,8 @@ SRCS=	fmt.c keyword.c nlist.c print.c ps
+ # keep ps from being an unnecessary load
+ # on large systems.
+ #
+-CFLAGS+=-DLAZY_PS
+-DPADD=	${LIBM} ${LIBKVM} ${LIBJAIL}
+-LDADD=	-lm -lkvm -ljail
++CFLAGS+=-DLAZY_PS ${CARGS}
++DPADD=	${LIBM} ${LIBKVM} ${LIBJAIL} ${LIBUTIL}
++LDADD=	-lm -lkvm -ljail -lutil -lxo
+ 
+ .include <bsd.prog.mk>
