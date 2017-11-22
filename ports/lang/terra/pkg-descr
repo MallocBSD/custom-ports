@@ -1,0 +1,9 @@
+New low-level system programming language that is designed to interoperate
+seamlessly with the Lua programming language. It is also backwards compatible
+with (and embeddable in) existing C code. Like C, Terra is a monomorphic,
+statically-typed, compiled language with manual memory management. But unlike
+C, it is designed to make interaction with Lua easy. Terra code shares Lua's
+syntax and control-flow constructs. It is easy to call Lua functions from
+Terra (or Terra functions from Lua).
+
+WWW: https://www.terralang.org/

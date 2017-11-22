@@ -1,0 +1,87 @@
+--- Makefile.orig	2017-10-17 06:05:35 UTC
++++ Makefile
+@@ -7,13 +7,13 @@
+ -include Makefile.inc
+ 
+ # Debian packages name llvm-config with a version number - list them here in preference order
+-LLVM_CONFIG ?= $(shell which llvm-config-3.5 llvm-config | head -1)
++LLVM_CONFIG ?= $(shell which llvm-config35 llvm-config-3.5 llvm-config | head -1)
+ #luajit will be downloaded automatically (it's much smaller than llvm)
+ #to override this, set LUAJIT_PREFIX to the home of an already installed luajit
+ LUAJIT_PREFIX ?= build
+ 
+ # same with clang
+-CLANG ?= $(shell which clang-3.5 clang | head -1)
++CLANG ?= $(shell which clang35 clang-3.5 clang | head -1)
+ 
+ CXX ?= $(CLANG)++
+ CC ?= $(CLANG)
+@@ -70,11 +70,11 @@ CPPFLAGS += -std=c++11
+ endif
+ 
+ 
+-ifeq ($(UNAME), Linux)
++ifneq ($(UNAME), Darwin)
+ DYNFLAGS = -shared -fPIC
+ TERRA_STATIC_LIBRARY += -Wl,-export-dynamic -Wl,--whole-archive $(LIBRARY) -Wl,--no-whole-archive
+ else
+-DYNFLAGS = -dynamiclib -single_module -fPIC -install_name "@rpath/terra.so"
++DYNFLAGS = -dynamiclib -single_module -fPIC -install_name "@rpath/libterra.so"
+ TERRA_STATIC_LIBRARY =  -Wl,-force_load,$(LIBRARY)
+ endif
+ 
+@@ -119,6 +119,10 @@ ifeq ($(UNAME), Linux)
+ SUPPORT_LIBRARY_FLAGS += -ldl -pthread
+ endif
+ 
++ifeq ($(UNAME), FreeBSD)
++SUPPORT_LIBRARY_FLAGS += -lexecinfo -pthread
++endif
++
+ PACKAGE_DEPS += $(LUAJIT_LIB)
+ 
+ #makes luajit happy on osx 10.6 (otherwise luaL_newstate returns NULL)
+@@ -154,7 +158,7 @@ LIBRARY = release/lib/libterra.a
+ LIBRARY_NOLUA = release/lib/libterra_nolua.a
+ LIBRARY_NOLUA_NOLLVM = release/lib/libterra_nolua_nollvm.a
+ LIBRARY_VARIANTS = $(LIBRARY_NOLUA) $(LIBRARY_NOLUA_NOLLVM)
+-DYNLIBRARY = release/lib/terra.so
++DYNLIBRARY = release/lib/libterra.so
+ RELEASE_HEADERS = $(addprefix release/include/terra/,$(LUAHEADERS))
+ BIN2C = build/bin2c
+ 
+@@ -162,7 +166,7 @@ BIN2C = build/bin2c
+ -include Makefile.inc
+ 
+ .PHONY:	all clean purge test release install
+-all:	$(EXECUTABLE) $(DYNLIBRARY)
++all:	$(EXECUTABLE) $(DYNLIBRARY) $(LIBRARY_VARIANTS)
+ 
+ test:	all
+ 	(cd tests; ./run)
+@@ -178,9 +182,13 @@ build/%.o:	src/%.c $(PACKAGE_DEPS)
+ build/$(LUAJIT_TAR):
+ ifeq ($(UNAME), Darwin)
+ 	curl $(LUAJIT_URL) -o build/$(LUAJIT_TAR)
+-else
++endif
++ifeq ($(UNAME), Linux)
+ 	wget $(LUAJIT_URL) -O build/$(LUAJIT_TAR)
+ endif
++ifeq ($(UNAME), FreeBSD)
++	fetch $(LUAJIT_URL) -o build/$(LUAJIT_TAR)
++endif
+ 
+ build/lib/libluajit-5.1.a: build/$(LUAJIT_TAR)
+ 	(cd build; tar -xf $(LUAJIT_TAR))
+@@ -217,8 +225,8 @@ $(LIBRARY_NOLUA_NOLLVM):	$(RELEASE_HEADE
+ 	rm -f $@
+ 	$(AR) -cq $@ $(addprefix build/, $(LIBOBJS))
+ 
+-$(DYNLIBRARY):	$(LIBRARY)
+-	$(CXX) $(DYNFLAGS) $(TERRA_STATIC_LIBRARY) $(SUPPORT_LIBRARY_FLAGS) -o $@  
++$(DYNLIBRARY):	$(RELEASE_HEADERS) $(addprefix build/, $(LIBOBJS)) build/llvm_objects/llvm_list
++	$(CXX) $(DYNFLAGS) -Wl,-export-dynamic $(SUPPORT_LIBRARY_FLAGS) $(addprefix build/, $(LIBOBJS)) build/llvm_objects/*/*.o -o $@
+ 
+ $(EXECUTABLE):	$(addprefix build/, $(EXEOBJS)) $(LIBRARY)
+ 	mkdir -p release/bin release/lib

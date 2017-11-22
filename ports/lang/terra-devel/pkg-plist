@@ -1,0 +1,10 @@
+bin/terra
+include/terra/lauxlib.h
+include/terra/lua.h
+include/terra/luaconf.h
+include/terra/lualib.h
+include/terra/terra.h
+lib/libterra.a
+lib/libterra.so
+lib/libterra_nolua.a
+lib/libterra_nolua_nollvm.a
